@@ -1,7 +1,8 @@
 import os
-
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
+
+
 
 # Configure application
 app = Flask(__name__)
@@ -25,15 +26,18 @@ def after_request(response):
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        name =  request.form.get('Name')
+        month =  request.form.get('Month')
+        day =  request.form.get('Day')
 
         # TODO: Add the user's entry into the database
-
+        db.execute('INSERT INTO birthdays (name,month,day) VALUES (?,?,?)',name,month,day)
         return redirect("/")
 
     else:
 
         # TODO: Display the entries in the database on index.html
+        temp = db.execute('SELECT name,day,month from birthdays')
 
-        return render_template("index.html")
-
+        return render_template("index.html",names=temp)
 
